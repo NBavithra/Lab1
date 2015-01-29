@@ -1,0 +1,65 @@
+library ieee;
+use ieee.std_logic_1164.ALL;
+use ieee.numeric_std.ALL;
+
+-- The above libaries lines must be included in every VHDL file, before EVERY ENTITY!
+
+--
+-- This is the main circuit Entity, which connects all wires to the FPGA pins (lights and switches)
+-- First we have a PORT mapping - naming all wires going to the outside world and if they are INputs or OUTputs
+-- Note that all signal names here are fixed by the "DE2_pins.csv" file which you must use for every lab
+--   
+
+entity Lab1 is port(
+      
+      key   : in  std_logic_vector(2 downto 0); -- 3 push buttons on the board - normally HIGH or '1' when not pressed
+      sw    : in  std_logic_vector(1 downto 1); -- use 2 out of 18 switches on the board - '0' (LOW) when down towards edge of board
+
+      ledr  : out std_logic_vector(0 downto 0); -- Red LEDs, only 1 used
+      ledg  : out std_logic_vector(0 downto 0)  -- Green LEDs, only 1 used
+);
+end Lab1;
+
+architecture SimpleCircuit of Lab1 is
+
+--Signals are either a vector or not.  A vector is a group of two or more signals
+--There are two basic types : Unsigned and std_logic_vector and std_logic is almosted used. 
+--Unsigned is a signal which is used for math operations such as +,-,*
+--std_logic_vectors is a signal which is used for logical operations such as OR,AND,NOT,XOR
+
+	-- declared variables (signal names) for the input type which are std_logic_vector
+	signal gas, clutch, brake, override: std_logic;
+	
+	-- declared variables (signal names) for the output type which are std_logic_vector
+	signal gasControl, brakeControl: std_logic;
+
+
+-- The function of Lab1 entity is defined here
+
+begin
+
+-- for simplicity, declare each input signal name (variable) a key
+	gas <= key(0);
+	clutch <= key(1);
+	brake <= key(2);
+	override <= sw(1);
+
+-- declare each output signal name (variable) a led light 
+	ledg(0)<= gasControl;
+	ledr(0)<= brakeControl;
+	
+-- a simple OR and a more complex AND/NOT circuit
+
+-- the NOT function inverts a signal
+-- remember the key(0), key(1) and key(2) are all inverted meaning they are all already turned on
+-- this means that it will be inverted below 
+
+-- gas control is on when the clutch, break, override is off and when the gas is on.
+	gasControl <= clutch AND brake AND NOT override AND gas;
+-- brake control is on when either override is on or when brake is turned on 
+	brakeControl <= override OR NOT brake;
+
+
+
+end SimpleCircuit;
+
