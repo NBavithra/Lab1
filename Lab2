@@ -14,6 +14,7 @@ entity SevenSegment is port (
    
    segmentsOut :  out std_logic_vector(6 downto 0)    -- 7-bit outputs to a 7-segment
 ); 
+
 end SevenSegment;
 
 architecture Behavioral of SevenSegment is
@@ -50,14 +51,12 @@ end Behavioral;
 --------------------------------------------------------------------------------
 -- Main entity
 --------------------------------------------------------------------------------
-
 library ieee;
 use ieee.std_logic_1164.all;
 use ieee.numeric_std.all;
 
 entity Lab2 is port (
-      
-  
+     
       sw               :   in  std_logic_vector(17 downto 0); -- 18 dip switches
 
       ledr             :   out std_logic_vector(17 downto 0); -- 18 red LEDs
@@ -103,9 +102,9 @@ begin
 -- when switch 17 down to 16 
    with sw(17 downto 16) select      
          Result <= "0"&OperandOne AND "0"&OperandTwo when "00",   
-				   "0"&OperandOne OR "0"&OperandTwo when "01",
-				   "0"&OperandOne XOR "0"&OperandTwo when "10",
-				   std_logic_vector(unsigned("0"&OperandOne)+unsigned("0"&OperandTwo)) when others;
+                   "0"&OperandOne OR "0"&OperandTwo when "01",
+                   "0"&OperandOne XOR "0"&OperandTwo when "10",
+		    std_logic_vector(unsigned("0"&OperandOne)+unsigned("0"&OperandTwo)) when others;
 				   
    with Result(8) select
    blanking <= '0' when '1',
@@ -116,9 +115,6 @@ begin
    ledr(7 downto 0) <= OperandOne;
    ledr(15 downto  8) <= OperandTwo;
    ledr(17 downto 16) <= Operator;
-
---Result<=std_logic_vector(unsigned("0000"&OperandOne)+unsigned("0000"&OperandTwo));
-	--Result<= "0000"&OperandOne and "0000"&OperandTwo
 	
 -- signal is sidplayed on seven-segment. '0' is concatenated with signal to make a 4-bit input
 
