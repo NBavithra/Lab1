@@ -83,9 +83,9 @@ architecture SimpleCircuit of Lab2 is
 --  unsigned is a signal which can be used to perform math operations such as +, -, *
 --  std_logic_vector is a signal which can be used for logic operations such as OR, AND, NOT, XOR
 --
-   signal OperandOne: std_logic_vector(7 downto 0); -- 3-bit intermediate signals (wires)
-   signal OperandTwo: std_logic_vector(15 downto 8);
-   signal Result: std_logic_vector(8 downto 0);
+   signal OperandOne: std_logic_vector(7 downto 0); -- OperandOne will be controlled by switches 0 to 7
+   signal OperandTwo: std_logic_vector(15 downto 8); -- OperandTwo will be controlled by switches 8 to 15
+   signal Result: std_logic_vector(8 downto 0); 
    signal Operator: std_logic_vector(1 downto 0);
    signal blanking: std_logic;
    
