@@ -57,11 +57,11 @@ use ieee.numeric_std.all;
 
 entity Lab2 is port (
       
-      --key              :   in  std_logic_vector( 3 downto 0); -- 4 push buttons
+  
       sw               :   in  std_logic_vector(17 downto 0); -- 18 dip switches
 
       ledr             :   out std_logic_vector(17 downto 0); -- 18 red LEDs
-      hex0, hex1, hex2, hex4, hex5, hex6, hex7, hex3:   out std_logic_vector( 6 downto 0)  -- 7-segment desplays
+      hex0, hex1, hex2, hex4, hex5, hex6, hex7:   out std_logic_vector( 6 downto 0)  -- 7-segment desplays
 );
 end Lab2;
 
@@ -80,13 +80,16 @@ architecture SimpleCircuit of Lab2 is
 
 -- Create any signals, or temporary variables to be used
 --
--- Note that there are two basic types and mixing them is difficult
+--  Note that there are two basic types and mixing them is difficult
 --  unsigned is a signal which can be used to perform math operations such as +, -, *
 --  std_logic_vector is a signal which can be used for logic operations such as OR, AND, NOT, XOR
 --
-   signal OperandOne, OperandTwo : std_logic_vector(7 downto 0); -- 3-bit intermediate signals (wires)
-   signal Result: std_logic_vector(11 downto 0);
+   signal OperandOne: std_logic_vector(7 downto 0); -- 3-bit intermediate signals (wires)
+   signal OperandTwo: std_logic_vector(15 downto 8);
+   signal Result: std_logic_vector(8 downto 0);
    signal Operator: std_logic_vector(1 downto 0);
+   signal blanking: std_logic;
+   
 -- Here the circuit begins
 
 begin
@@ -99,26 +102,29 @@ begin
 -- 2x1 multiplexer
 -- when switch 17 down to 16 
    with sw(17 downto 16) select      
-         Result <= OperandOne AND OperandTwo when "00",   
-				   OperandOne OR OperandTwo when "01",
-				   OperandOne XOR OperandTwo when "10",
-				   std_logic_vector(unsigned(OperandOne)+unsigned(OperandTwo)) when others;
+         Result <= "0"&OperandOne AND "0"&OperandTwo when "00",   
+				   "0"&OperandOne OR "0"&OperandTwo when "01",
+				   "0"&OperandOne XOR "0"&OperandTwo when "10",
+				   std_logic_vector(unsigned("0"&OperandOne)+unsigned("0"&OperandTwo)) when others;
+				   
+   with Result(8) select
+   blanking <= '0' when '1',
+   '1' when others;
            
 -- signal is assigned to LED
 
-   ledr(7 downto  0) <= OperandOne;
+   ledr(7 downto 0) <= OperandOne;
    ledr(15 downto  8) <= OperandTwo;
    ledr(17 downto 16) <= Operator;
 
-Result<=std_logic_vector(unsigned("0000"&OperandOne)+unsigned("0000"&OperandTwo));
-	Result<= "0000"&OperandOne and "0000"&OperandTwo;
+--Result<=std_logic_vector(unsigned("0000"&OperandOne)+unsigned("0000"&OperandTwo));
+	--Result<= "0000"&OperandOne and "0000"&OperandTwo
+	
 -- signal is sidplayed on seven-segment. '0' is concatenated with signal to make a 4-bit input
 
-   --D7SH0: SevenSegment port map(R(3 downto 0), '0', hex0 ); -- A is diplayed on HEX0, blanking is disabled
-  -- D7SH1: SevenSegment port map(R(7 downto 4), '0', hex1 ); -- B is diplayed on HEX1, blanking is disabled
-   --D7SH3: SevenSegment port map(R(11 downto 8), '0', hex3 ); -- S is diplayed on HEX3, blanking is disabled
-   
-   
+   D7SH0: SevenSegment port map(Result(3 downto 0), '0', hex0);  -- A is diplayed on HEX0, blanking is disabled
+   D7SH1: SevenSegment port map(Result(7 downto 4), '0', hex1);
+   D7SH2: SevenSegment port map("000"&Result(8), blanking, hex2);
    D7SH4: SevenSegment port map(OperandOne(3 downto 0), '0', hex4 ); -- A is diplayed on HEX0, blanking is disabled
    D7SH5: SevenSegment port map(OperandOne(7 downto 4), '0', hex5 ); 
    
