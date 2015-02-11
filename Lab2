@@ -60,7 +60,7 @@ entity Lab2 is port (
       sw               :   in  std_logic_vector(17 downto 0); -- 18 dip switches
 
       ledr             :   out std_logic_vector(17 downto 0); -- 18 red LEDs
-      hex0, hex1, hex2, hex4, hex5, hex6, hex7:   out std_logic_vector( 6 downto 0)  -- 7-segment desplays
+      hex0, hex1, hex2, hex4, hex5, hex6, hex7:   out std_logic_vector( 6 downto 0)  -- 7-segment displays
 );
 end Lab2;
 
@@ -86,8 +86,8 @@ architecture SimpleCircuit of Lab2 is
    signal OperandOne: std_logic_vector(7 downto 0); -- OperandOne will be controlled by switches 0 to 7
    signal OperandTwo: std_logic_vector(15 downto 8); -- OperandTwo will be controlled by switches 8 to 15
    signal Result: std_logic_vector(8 downto 0); 
-   signal Operator: std_logic_vector(1 downto 0);
-   signal blanking: std_logic;
+   signal Operator: std_logic_vector(1 downto 0); 
+   signal blanking: std_logic; 
    
 -- Here the circuit begins
 
@@ -95,17 +95,17 @@ begin
 
 -- intermediate signal assignments
 
-   OperandOne <= sw(7 downto 0);  -- connect the lowest 3 switches to A
-   OperandTwo <= sw(15 downto 8);  -- connect the highest 3 switches to B
+   OperandOne <= sw(7 downto 0);  -- connect the lowest 8 switches to A
+   OperandTwo <= sw(15 downto 8);  -- connect the highest 8 switches to B
    
 -- 2x1 multiplexer
--- when switch 17 down to 16 
+-- when switch 17 down to 16 is selected, depending on the chosen keys, output the values 
    with sw(17 downto 16) select      
          Result <= "0"&OperandOne AND "0"&OperandTwo when "00",   
                    "0"&OperandOne OR "0"&OperandTwo when "01",
                    "0"&OperandOne XOR "0"&OperandTwo when "10",
 		    std_logic_vector(unsigned("0"&OperandOne)+unsigned("0"&OperandTwo)) when others;
-				   
+
    with Result(8) select
    blanking <= '0' when '1',
    '1' when others;
