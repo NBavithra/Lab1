@@ -101,10 +101,10 @@ begin
 -- 2x1 multiplexer
 -- when switch 17 down to 16 
    with sw(17 downto 16) select      
-         Result <= "0"&OperandOne AND "0"&OperandTwo when "00",   
-                   "0"&OperandOne OR "0"&OperandTwo when "01",
-                   "0"&OperandOne XOR "0"&OperandTwo when "10",
-		    std_logic_vector(unsigned("0"&OperandOne)+unsigned("0"&OperandTwo)) when others;
+         Result <= "0"&OperandOne AND "0"&OperandTwo when "00",   --AND operation will occur when both switches 17 and 16 are off
+                   "0"&OperandOne OR "0"&OperandTwo when "01",    --OR operation will occur when switch [17] is turned on
+                   "0"&OperandOne XOR "0"&OperandTwo when "10",   --XOR operation will occur when switch [16] is turned on
+		    std_logic_vector(unsigned("0"&OperandOne)+unsigned("0"&OperandTwo)) when others; -- Add the operations
 				   
    with Result(8) select
    blanking <= '0' when '1',
