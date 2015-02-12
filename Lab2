@@ -118,13 +118,13 @@ begin
 	
 -- signal is sidplayed on seven-segment. '0' is concatenated with signal to make a 4-bit input
 
-   D7SH0: SevenSegment port map(Result(3 downto 0), '0', hex0);  -- A is diplayed on HEX0, blanking is disabled
-   D7SH1: SevenSegment port map(Result(7 downto 4), '0', hex1);
-   D7SH2: SevenSegment port map("000"&Result(8), blanking, hex2);
-   D7SH4: SevenSegment port map(OperandOne(3 downto 0), '0', hex4 ); -- A is diplayed on HEX0, blanking is disabled
-   D7SH5: SevenSegment port map(OperandOne(7 downto 4), '0', hex5 ); 
+   D7SH0: SevenSegment port map(Result(3 downto 0), '0', hex0);  -- Value is displayed on Hex0, blanking is disabled
+   D7SH1: SevenSegment port map(Result(7 downto 4), '0', hex1); --Value is displayed on Hex1, blanking is disabled
+   D7SH2: SevenSegment port map("000"&Result(8), blanking, hex2); -- Value is displayed on Hex2,blanking is enabled
+   D7SH4: SevenSegment port map(OperandOne(3 downto 0), '0', hex4 ); -- Value is displayed on Hex4, blanking is disabled
+   D7SH5: SevenSegment port map(OperandOne(7 downto 4), '0', hex5 ); Value is displayed on Hex5, blanking is disabled
    
-   D7SH6: SevenSegment port map(OperandTwo(11 downto 8), '0', hex6 ); 
-   D7SH7: SevenSegment port map(OperandTwo(15 downto 12), '0', hex7 ); 
+   D7SH6: SevenSegment port map(OperandTwo(11 downto 8), '0', hex6 );  Value is displayed on Hex6, blanking is disabled
+   D7SH7: SevenSegment port map(OperandTwo(15 downto 12), '0', hex7 ); Value is displayed on Hex7, blanking is disabled
 
 end SimpleCircuit;
