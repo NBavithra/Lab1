@@ -117,6 +117,7 @@ begin
    ledr(17 downto 16) <= Operator;
 	
 -- signal is sidplayed on seven-segment. '0' is concatenated with signal to make a 4-bit input
+-- written in order of the SevenSegment part, which is defined at the beginning of the code
 
    D7SH0: SevenSegment port map(Result(3 downto 0), '0', hex0);  -- Value is displayed on Hex0, blanking is disabled
    D7SH1: SevenSegment port map(Result(7 downto 4), '0', hex1); --Value is displayed on Hex1, blanking is disabled
