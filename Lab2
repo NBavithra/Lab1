@@ -85,8 +85,8 @@ architecture SimpleCircuit of Lab2 is
 --
    signal OperandOne: std_logic_vector(7 downto 0); -- OperandOne will be controlled by switches 0 to 7
    signal OperandTwo: std_logic_vector(15 downto 8); -- OperandTwo will be controlled by switches 8 to 15
-   signal Result: std_logic_vector(8 downto 0); 
-   signal Operator: std_logic_vector(1 downto 0);
+   signal Result: std_logic_vector(8 downto 0); --Assigned a result variable that will be used for logic operations 
+   signal Operator: std_logic_vector(1 downto 0); --The logic operation will depend on two switches
    signal blanking: std_logic;
    
 -- Here the circuit begins
@@ -95,24 +95,24 @@ begin
 
 -- intermediate signal assignments
 
-   OperandOne <= sw(7 downto 0);  -- connect the lowest 3 switches to A
-   OperandTwo <= sw(15 downto 8);  -- connect the highest 3 switches to B
+   OperandOne <= sw(7 downto 0);  -- connect the lowest 8 switches to A
+   OperandTwo <= sw(15 downto 8);  -- connect the higher 8 switches to B
    
 -- 2x1 multiplexer
 -- when switch 17 down to 16 
    with sw(17 downto 16) select      
-         Result <= "0"&OperandOne AND "0"&OperandTwo when "00",   --AND operation will occur when both switches 17 and 16 are off
-                   "0"&OperandOne OR "0"&OperandTwo when "01",    --OR operation will occur when switch [17] is turned on
-                   "0"&OperandOne XOR "0"&OperandTwo when "10",   --XOR operation will occur when switch [16] is turned on
-		    std_logic_vector(unsigned("0"&OperandOne)+unsigned("0"&OperandTwo)) when others; -- Add the operations
+        Result <= "0"&OperandOne AND "0"&OperandTwo when "00",   --AND operation will occur when both switches 17 and 16 are off
+        	  "0"&OperandOne OR "0"&OperandTwo when "01",    --OR operation will occur when switch 16 is turned on
+                  "0"&OperandOne XOR "0"&OperandTwo when "10",   --XOR operation will occur when switch 17 is turned on
+                  std_logic_vector(unsigned("0"&OperandOne)+unsigned("0"&OperandTwo)) when others; -- Add the operations
 				   
-   with Result(8) select
-   blanking <= '0' when '1',
-   '1' when others;
+   with Result(8) select --if switch 8 is up, blanking will be enabled
+   blanking <= '0' when '1', --when switch is up, then blanking will show zero
+   '1' when others; 
            
 -- signal is assigned to LED
 
-   ledr(7 downto 0) <= OperandOne;
+   ledr(7 downto 0) <= OperandOne; 
    ledr(15 downto  8) <= OperandTwo;
    ledr(17 downto 16) <= Operator;
 	
